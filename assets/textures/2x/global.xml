@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:bfadbf3e53a75cedbdd4187b9e51ed72$ -->
+<TextureAtlas imagePath="global.png">
+    <SubTexture name="button 1" x="512" y="1" width="252" height="63"/>
+    <SubTexture name="harabara_0" x="1" y="1" width="510" height="266" frameX="0" frameY="0" frameWidth="512" frameHeight="512"/>
+</TextureAtlas>
