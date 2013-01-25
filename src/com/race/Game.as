@@ -1,6 +1,7 @@
 package com.race
 {
 	import com.race.cars.Car;
+	import com.race.gui.buttons.CustomButton;
 	
 	import flash.display.BitmapData;
 	import flash.geom.Matrix;
@@ -10,7 +11,10 @@ package com.race
 	import nape.phys.Body;
 	import nape.phys.BodyType;
 	import nape.shape.Polygon;
+	import nape.shape.Shape;
 	import nape.space.Space;
+	import nape.util.Debug;
+	import nape.util.ShapeDebug;
 	
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -21,7 +25,7 @@ package com.race
 	public class Game extends Sprite 
 	{
 		private const SLICE_HEIGHT:int = 600;
-		private const SLICE_WIDTH:int = 30;
+		private const SLICE_WIDTH:int = 15;
 		private const INTERVAL:Number = 1 / 60;
 		
 		private var mSpace:Space;
@@ -34,15 +38,22 @@ package com.race
 		private var mCurrentAmplitude:Number;
 		private var mSlicesInCurrentHill:int;
 		private var mIndexSliceInCurrentHill:int;
-		private var mCurrentYPoint:Number = 600;
+		private var mCurrentYPoint:Number = 300;
 		private var mSlices:Vector.<Body>;
 		private var mSliceConstructor:Vector.<Vec2>;
+		
+		private var debug:ShapeDebug;
+		
+		private var rightBtn:CustomButton;
+		private var leftBtn:CustomButton;
 		
 		public function Game():void 
 		{			
 			//Initialize Nape Space
-			mSpace = new Space(new Vec2(0, 2000));
-			
+			mSpace = new Space(new Vec2(0, 300));
+			debug = new ShapeDebug(G.STAGE_WIDTH, G.STAGE_HEIGHT);
+			debug.drawConstraints = true;
+			Starling.current.nativeOverlay.addChild(debug.display);
 			mHills = new Sprite();
 			addChild(mHills);
 			
@@ -63,19 +74,37 @@ package com.race
 			{
 				createSlice();
 			}
-			mCar = new Car();
-			mCar.body.space = mSpace;
-//			addChild(mCar.graphic);
+			mCar = new Car(this, mSpace);
 			
 			startSimulation();
+			
+			rightBtn = new CustomButton(Root.assets.getTexture("control btn"));
+			rightBtn.x = G.STAGE_WIDTH - rightBtn.pivotX - 10;
+			rightBtn.y = G.STAGE_HEIGHT - rightBtn.pivotY - 10;
+			
+			leftBtn = new CustomButton(Root.assets.getTexture("control btn"));
+			leftBtn.scaleX = -1;
+			leftBtn.x = leftBtn.pivotX + 10;
+			leftBtn.y = rightBtn.y;
+			
+			if(stage) init();
+			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
+		private function init(e:Event = null):void
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+			rightBtn.addEventListener(Event.TRIGGERED, onClick);
+			leftBtn.addEventListener(Event.TRIGGERED, onClick);
+			
+			Root.instance.addChild(rightBtn);
+			Root.instance.addChild(leftBtn);
+		}
 		private function createSlice():void 
 		{
 			//Every time a new hill has to be created this algorithm predicts where the slices will be positioned
 			if (mIndexSliceInCurrentHill >= mSlicesInCurrentHill) {
-				mSlicesInCurrentHill = Math.random() * 40 + 10;
-				mCurrentAmplitude = Math.random() * 60 - 20;
+				mSlicesInCurrentHill = Math.random() * 20 + 10;
+				mCurrentAmplitude = Math.random() * 20 - 8;
 				mIndexSliceInCurrentHill = 0;
 			}
 			
@@ -119,6 +148,13 @@ package com.race
 			mSpace.step(INTERVAL);
 			checkHills();
 			panForeground();
+			if(mCar.body.userData.graphicUpdate != null)
+			{
+				mCar.body.userData.graphicUpdate(mCar.body);
+			}
+			debug.clear();
+			debug.draw(mSpace);
+			debug.flush();
 		}
 		
 		private function checkHills():void 
@@ -143,10 +179,20 @@ package com.race
 		
 		private function panForeground():void
 		{
-			this.x = Starling.current.stage.stageWidth / 2 - mCar.body.position.x;
-			this.y = Starling.current.stage.stageHeight / 2 - mCar.body.position.y;
+			this.x = debug.display.x = Starling.current.stage.stageWidth / 2 - mCar.body.position.x;
+			this.y = debug.display.y = Starling.current.stage.stageHeight / 2 - mCar.body.position.y;
 		}
-		
+		private function onClick(e:Event):void
+		{
+			if(e.target == rightBtn)
+			{
+				mCar.body.applyAngularImpulse(720);
+			}
+			else if(e.target == leftBtn)
+			{
+				mCar.body.applyAngularImpulse(-720);
+			}
+		}
 	}
 	
 }

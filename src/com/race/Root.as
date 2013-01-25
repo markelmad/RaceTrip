@@ -14,12 +14,14 @@ package com.race
 	{
 		private static var sAssets:AssetManager;
 		private static var sPreloader:ProgressBar;
+		private static var sInstance:Root;
 		
 		private var mCurrentScene:Sprite;
 		private var bg:Image;
 		
 		public function Root()
 		{
+			sInstance = this;
 			addEventListener(Main.START_GAME, startGame);
 		}
 		public function start(_bg:Texture, assets:AssetManager):void
@@ -66,5 +68,6 @@ package com.race
 		}
 		
 		public static function get assets():AssetManager { return sAssets };
+		public static function get instance():Root { return sInstance };
 	}
 }
