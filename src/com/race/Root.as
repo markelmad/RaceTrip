@@ -62,7 +62,6 @@ package com.race
 		}
 		private function startGame(e:Event):void
 		{
-			trace("GAME SHOULD START");
 			showScene(Game);
 		}
 		
