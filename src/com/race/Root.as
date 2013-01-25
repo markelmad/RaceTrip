@@ -20,12 +20,10 @@ package com.race
 		
 		public function Root()
 		{
-			
+			addEventListener(Main.START_GAME, startGame);
 		}
 		public function start(_bg:Texture, assets:AssetManager):void
 		{
-			addEventListener(Main.START_GAME, startGame);
-			
 			sAssets = assets;
 			bg = new Image(_bg);
 			addChild(bg);
@@ -51,8 +49,6 @@ package com.race
 						t.animate("alpha", 0);
 						t.onComplete = function():void { bg.removeFromParent(true); showScene(Main);};
 						Starling.juggler.add(t);
-						
-						
 					}, 0.15);
 			});
 			
@@ -61,10 +57,12 @@ package com.race
 		{
 			if(mCurrentScene) mCurrentScene.removeFromParent(true);
 			mCurrentScene = new s();
+			mCurrentScene.addEventListener(Main.START_GAME, startGame);
 			addChild(mCurrentScene);
 		}
 		private function startGame(e:Event):void
 		{
+			trace("GAME SHOULD START");
 			showScene(Game);
 		}
 		
