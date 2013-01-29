@@ -1,5 +1,7 @@
 package com.race.cars
 {
+	import com.race.Root;
+	
 	import nape.callbacks.CbType;
 	import nape.constraint.PivotJoint;
 	import nape.constraint.WeldJoint;
@@ -13,6 +15,7 @@ package com.race.cars
 	import nape.space.Space;
 	
 	import starling.core.Starling;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.display.Stage;
@@ -37,6 +40,8 @@ package com.race.cars
 		private var mSpace:Space;
 		//visuals
 		private var mCarBody:Quad;
+		private var mRearWheelGraphic:Image;
+		private var mFrontWheelGraphic:Image;
 		private var mParent:Sprite;
 		
 		
@@ -92,29 +97,49 @@ package com.race.cars
 			
 			bodyJoint.space = space;
 //			
+			mCarBody = new Quad(60, 15);
+			mCarBody.pivotX = 45;
+			mCarBody.pivotY = 7.5;
+			
+			mRearWheelGraphic = new Image(Root.assets.getTexture("wheel"));
+			mRearWheelGraphic.pivotX = mRearWheelGraphic.width >> 1;
+			mRearWheelGraphic.pivotY =  mRearWheelGraphic.height >> 1;
+			
+			mFrontWheelGraphic = new Image(Root.assets.getTexture("wheel"));
+			mFrontWheelGraphic.pivotX = mFrontWheelGraphic.width >> 1;
+			mFrontWheelGraphic.pivotY = mFrontWheelGraphic.height >> 1;
+			
+			parent.addChild(mCarBody);
+			parent.addChild(mRearWheelGraphic);
+			parent.addChild(mFrontWheelGraphic);
+			
 			mFrontBody.userData.graphic = mCarBody;
-			mFrontBody.userData.graphicUpdate = onCarUpdate;
-			
-			mCarBody = new Quad(60, 20);
-			mCarBody.pivotX = 30;
-			mCarBody.pivotY = 10;
-//			parent.addChild(mCarBody);
+			mRearWheelBody.userData.graphic = mRearWheelGraphic;
+			mFrontWheelBody.userData.graphic = mFrontWheelGraphic;
 		}
-		private function onCarUpdate(b:Body):void
+		public function onCarUpdate():void
 		{
-			mCarBody.x = b.position.x;
-			mCarBody.y = b.position.y;
-			mCarBody.rotation = b.rotation;
+			mCarBody.x = mFrontBody.position.x;
+			mCarBody.y = mFrontBody.position.y;
+			mCarBody.rotation = mFrontBody.rotation;
 			
-			b.applyImpulse(mImpulse);
+			mRearWheelGraphic.x = mRearWheelBody.position.x;
+			mRearWheelGraphic.y = mRearWheelBody.position.y;
+			mRearWheelGraphic.rotation = mRearWheelBody.rotation;
+			
+			mFrontWheelGraphic.x = mFrontWheelBody.position.x;
+			mFrontWheelGraphic.y = mFrontWheelBody.position.y;
+			mFrontWheelGraphic.rotation = mFrontWheelBody.rotation;
+			
+			mFrontBody.applyImpulse(mImpulse);
 //			mRearWheelBody.applyImpulse(mImpulse);
-			if(b.velocity.x < 350)
+			if(mFrontBody.velocity.x < 350)
 			{
-				b.velocity.x = 350;
+				mFrontBody.velocity.x = 350;
 			}
-			else if(b.velocity.x > 500)
+			else if(mFrontBody.velocity.x > 500)
 			{
-				b.velocity.x = 500;
+				mFrontBody.velocity.x = 500;
 			}
 		}
 		public function get body():Body

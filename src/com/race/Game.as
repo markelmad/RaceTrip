@@ -42,7 +42,7 @@ package com.race
 		private var mSlices:Vector.<Body>;
 		private var mSliceConstructor:Vector.<Vec2>;
 		
-		private var debug:ShapeDebug;
+//		private var debug:ShapeDebug;
 		
 		private var rightBtn:CustomButton;
 		private var leftBtn:CustomButton;
@@ -51,9 +51,9 @@ package com.race
 		{			
 			//Initialize Nape Space
 			mSpace = new Space(new Vec2(0, 300));
-			debug = new ShapeDebug(G.STAGE_WIDTH, G.STAGE_HEIGHT);
-			debug.drawConstraints = true;
-			Starling.current.nativeOverlay.addChild(debug.display);
+//			debug = new ShapeDebug(G.STAGE_WIDTH, G.STAGE_HEIGHT);
+//			debug.drawConstraints = true;
+//			Starling.current.nativeOverlay.addChild(debug.display);
 			mHills = new Sprite();
 			addChild(mHills);
 			
@@ -148,13 +148,14 @@ package com.race
 			mSpace.step(INTERVAL);
 			checkHills();
 			panForeground();
-			if(mCar.body.userData.graphicUpdate != null)
-			{
-				mCar.body.userData.graphicUpdate(mCar.body);
-			}
-			debug.clear();
-			debug.draw(mSpace);
-			debug.flush();
+			mCar.onCarUpdate();
+//			if(mCar.body.userData.graphicUpdate != null)
+//			{
+//				mCar.body.userData.graphicUpdate(mCar.body);
+//			}
+//			debug.clear();
+//			debug.draw(mSpace);
+//			debug.flush();
 		}
 		
 		private function checkHills():void 
@@ -179,8 +180,10 @@ package com.race
 		
 		private function panForeground():void
 		{
-			this.x = debug.display.x = Starling.current.stage.stageWidth / 2 - mCar.body.position.x;
-			this.y = debug.display.y = Starling.current.stage.stageHeight / 2 - mCar.body.position.y;
+			this.x = Starling.current.stage.stageWidth / 2 - mCar.body.position.x;
+			this.y = Starling.current.stage.stageHeight / 2 - mCar.body.position.y;
+//			this.x = debug.display.x = Starling.current.stage.stageWidth / 2 - mCar.body.position.x;
+//			this.y = debug.display.y = Starling.current.stage.stageHeight / 2 - mCar.body.position.y;
 		}
 		private function onClick(e:Event):void
 		{
