@@ -11,10 +11,7 @@ package com.race
 	import nape.phys.Body;
 	import nape.phys.BodyType;
 	import nape.shape.Polygon;
-	import nape.shape.Shape;
 	import nape.space.Space;
-	import nape.util.Debug;
-	import nape.util.ShapeDebug;
 	
 	import starling.core.Starling;
 	import starling.display.Image;
@@ -50,7 +47,7 @@ package com.race
 		public function Game():void 
 		{			
 			//Initialize Nape Space
-			mSpace = new Space(new Vec2(0, 300));
+			mSpace = new Space(new Vec2(0, 100));
 //			debug = new ShapeDebug(G.STAGE_WIDTH, G.STAGE_HEIGHT);
 //			debug.drawConstraints = true;
 //			Starling.current.nativeOverlay.addChild(debug.display);

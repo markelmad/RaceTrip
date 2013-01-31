@@ -31,7 +31,7 @@ package com.race
 			addChild(bg);
 			
 			sPreloader = new ProgressBar(500, 30);
-			sPreloader.x = G.centerX;
+			sPreloader.x = G.STAGE_CENTER_X - 250;
 			sPreloader.y = G.screenH - 20 - sPreloader.height;
 			addChild(sPreloader);
 			
@@ -51,7 +51,7 @@ package com.race
 						t.animate("alpha", 0);
 						t.onComplete = function():void { bg.removeFromParent(true); showScene(Main);};
 						Starling.juggler.add(t);
-					}, 0.15);
+					}, 0.5);
 			});
 			
 		}
